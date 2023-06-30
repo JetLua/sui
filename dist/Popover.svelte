@@ -1,7 +1,7 @@
 <script lang="ts">
   import {cubicInOut} from 'svelte/easing'
   import type {EasingFunction, TransitionConfig} from 'svelte/transition'
-  import {contains, debounce, cls} from '~/util'
+  import {contains, debounce, cls} from './util'
 
 
   let className: string | undefined = undefined
