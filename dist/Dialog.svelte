@@ -5,7 +5,7 @@
 </script>
 
 <script lang="ts">
-  import {cls, shouldKey} from '@treeland/util'
+  import {cls, shouldKey} from '~/util'
   import {cubicOut} from 'svelte/easing'
   import {fade, type TransitionConfig} from 'svelte/transition'
 

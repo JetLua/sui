@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {shouldKey} from '@treeland/util'
+  import {shouldKey} from '~/util'
 
   let width = 60
   let height = 30

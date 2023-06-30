@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {cls} from '@treeland/util'
+  import {cls} from '~/util'
   import {slide} from 'svelte/transition'
 
   let className: string | undefined = undefined

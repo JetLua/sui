@@ -28,10 +28,6 @@
 	"svelte": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"type": "module",
-	"peerDependencies": {
-		"@treeland/util": "workspace:",
-		"svelte": "^4.0.0"
-	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^2.1.0",
 		"@sveltejs/kit": "^1.21.0",
