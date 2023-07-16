@@ -10,6 +10,8 @@ declare const __propDef: {
         }[] | undefined;
         value?: string | undefined;
         variant?: "standard" | "outlined" | undefined;
+        help?: string | undefined;
+        maxlength?: number | undefined;
     };
     events: {
         [evt: string]: CustomEvent<any>;

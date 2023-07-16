@@ -11,12 +11,14 @@
   let variant: 'standard' | 'outlined' = 'standard'
   let focused = false
   let placeholder = true
+  let help: string | undefined = undefined
+  let maxlength: number | undefined = undefined
 
   function onBlur() {
     focused = false
     if (!required) return
 
-    if (!value) return err = `${label}不能为空`
+    if (!value) return err = help ?? `${label}不能为空`
 
     if (rules) {
       for (const {pattern, err: _err} of rules) {
@@ -33,7 +35,7 @@
 
   $: placeholder = !value
 
-  export {className as class, label, required, rules, value, variant}
+  export {className as class, label, required, rules, value, variant, help, maxlength}
 </script>
 
 <div class={cls('flex flex-col items-center relative', className)}>
@@ -43,7 +45,7 @@
     {#if variant === 'outlined'}
       <fieldset class="w-full relative flex px-2 py-1">
         <legend class="px-2" class:required>{label}</legend>
-        <input
+        <input maxlength={maxlength}
         bind:value={value}
         class="outline-0 overflow-hidden flex-1 text-slate-500 block px-2 bg-transparent"
         on:blur={onBlur}
@@ -51,7 +53,7 @@
       </fieldset>
     {:else}
       <div class="w-full relative flex">
-        <input
+        <input maxlength={maxlength}
         bind:value={value}
         class="outline-0 overflow-hidden flex-1 text-slate-500 block bg-transparent"
         on:blur={onBlur}
@@ -118,7 +120,7 @@
 
     legend {
       font-size: .75rem;
-      color: #999;
+      color: var(--zero-input-label-color, #999);
 
       &.required {
         @extend %required;
@@ -141,11 +143,12 @@
     top: 0;
     bottom: 0;
     margin: auto;
-    color: #999;
+    color: var(--zero-input-label-color, #999);
     z-index: 1;
     display: flex;
     align-items: center;
     font-style: normal;
+    pointer-events: none;
 
     &.required {
       @extend %required;
