@@ -67,7 +67,7 @@
   class="bg-black/50 w-full h-full fixed top-0 left-0 flex items-center justify-center"
   transition:fade={{duration: 2e2}}>
   <section
-    class={cls('bg-white rounded-lg w-5/6 max-w-lg p-4', className)}
+    class={cls('bg-white rounded-lg w-5/6 max-w-lg', className)}
     transition:animate={{duration: 3e2}}>
     <slot/>
   </section>
