@@ -64,7 +64,7 @@
 {#if visible}
 <section
   bind:this={shadow}
-  class="bg-black/50 w-full h-full fixed top-0 left-0 flex items-center justify-center"
+  class={cls('bg-black/50 w-full h-full fixed top-0 left-0 flex items-center justify-center', className)}
   transition:fade={{duration: 2e2}}>
   <section
     class={cls('bg-white rounded-lg w-5/6 max-w-lg', className)}
