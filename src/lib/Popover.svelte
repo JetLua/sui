@@ -3,7 +3,6 @@
   import type {EasingFunction, TransitionConfig} from 'svelte/transition'
   import {contains, debounce, cls} from '@iro/util'
 
-
   let className: string | undefined = undefined
   let root: HTMLElement
   let target: HTMLElement
