@@ -1,9 +1,11 @@
 <script lang="ts">
-  import {Switch, Dialog, ProgressBar, Input, Popover} from '$lib'
+  import {Switch, Dialog, ProgressBar, Input, Popover, Checkbox} from '$lib'
   let target: HTMLElement
   let inputValue: string
   let dialog = false
 </script>
+
+<Checkbox class="w-[20px] h-[20px] bg-sky-500">dddd</Checkbox>
 
 <button bind:this={target} class="bg-blue-500 text-white p-2 rounded-md">Show Popover</button>
 <Switch/>
