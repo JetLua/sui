@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {shouldKey} from './util'
+  import {shouldKey} from '@iro/util'
 
   let width = 60
   let height = 30

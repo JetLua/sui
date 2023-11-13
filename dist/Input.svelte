@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {cls} from './util'
+  import {cls} from '@iro/util'
   import {slide} from 'svelte/transition'
 
   let className: string | undefined = undefined
