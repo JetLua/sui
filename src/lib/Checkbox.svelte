@@ -1,19 +1,23 @@
 <script lang="ts">
-  import {cls} from '@iro/util'
+  import {cls, shouldKey} from '@iro/util'
   const id = crypto.randomUUID()
   let className = ''
+  let checked = false
 
-  export {className as class}
+  export {className as class, checked}
 </script>
 
-<input type="checkbox" class="hidden" id={id}>
-<label for={id} class="flex items-center gap-2 cursor-pointer">
-  <div class={cls('flex items-center justify-center rounded-full p-[4px]', className)}>
-    <svg width="12px" height="9px" viewBox="0 0 12 9">
-      <polyline points="1 5 4 8 11 1"></polyline>
-    </svg>
+<input type="checkbox" class="hidden" id={id} bind:checked={checked}>
+<label for={id}>
+  <div class="flex items-center gap-2 cursor-pointer" tabindex="0" role="button"
+    on:keydown={e => (shouldKey(e, 'enter') || shouldKey(e, 'space')) && (checked = !checked)}>
+    <div class={cls('flex items-center justify-center rounded-full p-[4px]', className)}>
+      <svg width="12px" height="9px" viewBox="0 0 12 9">
+        <polyline points="1 5 4 8 11 1"></polyline>
+      </svg>
+    </div>
+    <slot/>
   </div>
-  <slot/>
 </label>
 
 <style lang="scss">
@@ -33,7 +37,7 @@
 
   input[type=checkbox] {
     & + label {
-      & > div {
+      div > div {
         border: 1px solid #ccc;
         background-color: #fff;
         transition: background-color .3s ease;
@@ -41,7 +45,7 @@
     }
 
     &:checked + label {
-      & > div {
+      div > div {
         border: none;
         background-color: var(--color, #0ea5e9);
       }
