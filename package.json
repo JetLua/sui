@@ -1,6 +1,6 @@
 {
 	"name": "@iro/sui",
-	"version": "1.0.1",
+	"version": "1.1.0",
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev --host",
@@ -11,8 +11,8 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"pb:patch": "pnpm version patch && pnpm commit && pnpm publish",
-    "pb:minor": "pnpm version minor && pnpm commit && pnpm publish",
-    "pb:major": "pnpm version major && pnpm commit && pnpm publish"
+		"pb:minor": "pnpm version minor && pnpm commit && pnpm publish",
+		"pb:major": "pnpm version major && pnpm commit && pnpm publish"
 	},
 	"exports": {
 		".": {
