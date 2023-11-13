@@ -9,7 +9,7 @@
   let target: HTMLElement
   let visible = false
   let origin = ['', ''] as [string, string]
-  let position = {left: 'auto', right: 'auto', top: 'auto', bottom: 'auto'} as Record<string, string>
+  let position = {left: 'auto', right: 'auto', top: 'auto', bottom: 'auto'} satisfies Record<string, string>
 
   function onClick() {
     visible = !visible
@@ -18,10 +18,16 @@
   }
 
   const calc = function() {
+    if (!target) return
     // 计算位置
     const {innerHeight: h, innerWidth: w} = window
     const {bottom, left, right, top} = target.getBoundingClientRect()
     const tw = right - left
+
+    position.top = 'auto'
+    position.left = 'auto'
+    position.right = 'auto'
+    position.bottom = 'auto'
 
     // 偏左
     if ((left + right) / 2 <= w / 2) {
@@ -40,6 +46,8 @@
       position.bottom = `${h - top + 10}px`
       origin[1] = 'bottom'
     }
+
+    position = position
   }
 
   function show(node: HTMLElement, params?: {duration?: number, easing?: EasingFunction}): TransitionConfig {
@@ -71,7 +79,7 @@
 <svelte:window on:click={onGlobalClick} on:resize={onResize}/>
 
 {#if visible}
-  <section class={cls("absolute bg-white rounded-md shadow-md z-10", className)}
+  <section class={cls("fixed bg-white rounded-md shadow-md z-10", className)}
     style:top={position.top}
     style:left={position.left}
     style:right={position.right}

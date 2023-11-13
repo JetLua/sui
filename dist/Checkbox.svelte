@@ -1,6 +1,6 @@
 <script lang="ts">
   import {cls, shouldKey} from '@iro/util'
-  const id = crypto.randomUUID()
+  const id = 'crypto.randomUUID()'
   let className = ''
   let checked = false
 
