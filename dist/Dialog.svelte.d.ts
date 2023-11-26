@@ -1,4 +1,4 @@
-import { SvelteComponentTyped } from "svelte";
+import { SvelteComponent } from "svelte";
 declare const __propDef: {
     props: {
         visible?: boolean | undefined;
@@ -14,6 +14,6 @@ declare const __propDef: {
 export type DialogProps = typeof __propDef.props;
 export type DialogEvents = typeof __propDef.events;
 export type DialogSlots = typeof __propDef.slots;
-export default class Dialog extends SvelteComponentTyped<DialogProps, DialogEvents, DialogSlots> {
+export default class Dialog extends SvelteComponent<DialogProps, DialogEvents, DialogSlots> {
 }
 export {};

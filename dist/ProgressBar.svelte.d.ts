@@ -1,4 +1,4 @@
-import { SvelteComponentTyped } from "svelte";
+import { SvelteComponent } from "svelte";
 declare const __propDef: {
     props: {
         color?: string | undefined;
@@ -15,6 +15,6 @@ declare const __propDef: {
 export type ProgressBarProps = typeof __propDef.props;
 export type ProgressBarEvents = typeof __propDef.events;
 export type ProgressBarSlots = typeof __propDef.slots;
-export default class ProgressBar extends SvelteComponentTyped<ProgressBarProps, ProgressBarEvents, ProgressBarSlots> {
+export default class ProgressBar extends SvelteComponent<ProgressBarProps, ProgressBarEvents, ProgressBarSlots> {
 }
 export {};
