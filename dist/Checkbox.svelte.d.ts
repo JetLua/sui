@@ -5,6 +5,8 @@ declare const __propDef: {
         checked?: boolean | undefined;
     };
     events: {
+        check: CustomEvent<boolean>;
+    } & {
         [evt: string]: CustomEvent<any>;
     };
     slots: {

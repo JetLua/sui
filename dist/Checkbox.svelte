@@ -1,6 +1,8 @@
 <script lang="ts">
+  import {createEventDispatcher} from 'svelte'
   import {cls, shouldKey} from '@iro/util'
   const id = crypto.randomUUID()
+  const dispatch = createEventDispatcher<{check: boolean}>()
 
   let className = ''
   let checked = false
@@ -8,10 +10,11 @@
   export {className as class, checked}
 </script>
 
-<input type="checkbox" class="hidden" id={id} bind:checked={checked}>
+<input type="checkbox" hidden id={id} checked={checked} disabled>
 <label for={id}>
   <div class="flex items-center gap-2 cursor-pointer" tabindex="0" role="button"
-    on:keydown={e => (shouldKey(e, 'enter') || shouldKey(e, 'space')) && (checked = !checked)}>
+    on:click={() => dispatch('check', !checked)}
+    on:keydown={e => (shouldKey(e, 'enter') || shouldKey(e, 'space')) && dispatch('check', !checked)}>
     <div class={cls('flex items-center justify-center rounded-full p-[4px]', className)}>
       <svg width="12px" height="9px" viewBox="0 0 12 9">
         <polyline points="1 5 4 8 11 1"></polyline>
