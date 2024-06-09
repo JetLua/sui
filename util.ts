@@ -13,7 +13,7 @@ export function ripple(node: HTMLElement, opts: {cls?: string}) {
       .map(v => +v)
 
     for (let i = 0; i < 3; i++) {
-      list[i] *= 1.3
+      list[i] *= .8
       list[i] = Math.min(255, Math.round(list[i]))
     }
 
@@ -54,5 +54,13 @@ export function ripple(node: HTMLElement, opts: {cls?: string}) {
     destroy() {
       node.removeEventListener('pointerdown', handle)
     }
+  }
+}
+
+export function dispatch(e: KeyboardEvent) {
+  if (e.key === ' ' || e.key.toLowerCase() === 'enter') {
+    e.stopPropagation()
+    const target = e.target as HTMLElement
+    target.dispatchEvent(new MouseEvent('click', {view: window, bubbles: true, cancelable: true}))
   }
 }
