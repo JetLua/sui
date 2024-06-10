@@ -1,7 +1,9 @@
 <script lang="ts">
   import clsx from 'clsx'
-  import type {Snippet} from 'svelte'
+  import {onMount, type Snippet} from 'svelte'
   import type {HTMLSelectAttributes} from 'svelte/elements'
+  import VirtualList from './VirtualList.svelte'
+  import Popover from './Popover.svelte'
 
   interface Props extends HTMLSelectAttributes {
     children?: Snippet
@@ -10,31 +12,50 @@
 
   const {children, label, ...props}: Props = $props()
 
-  const data = $state({
+  const st = $state({
     focused: false,
-    value: ''
+    value: '',
+    root: null as unknown as HTMLElement,
+    w: ''
   })
 
   function onFocus() {
-    data.focused = true
+    st.focused = true
   }
 
   function onBlur() {
-    data.focused = false
+    st.focused = false
   }
+
+
+
+  onMount(() => {
+    const resizeObserver = new ResizeObserver(entries => {
+      st.w = `${entries[0].contentRect.width}px`
+    })
+
+    resizeObserver.observe(st.root)
+
+    return () => resizeObserver.disconnect()
+  })
 </script>
 
-<div class={clsx('group relative border-b border-slate-400 inline-block rounded-t-md overflow-hidden bg-[var(--bg,transparent)] pt-5 pb-2', data.focused && 'focused', label ? 'pt-5' : 'pt-2', props.class)}>
+<div bind:this={st.root} class={clsx('group relative inline-block rounded-t-md overflow-hidden bg-[var(--bg,transparent)] pt-5 pb-0', st.focused && 'focused', label ? 'pt-5' : 'pt-2', props.class)}>
   {#if label}
-    <span class="text-slate-500 absolute w-fit h-fit top-[0] left-4 right-[0] bottom-[0] m-auto !ml-0" class:small={data.focused || data.value}>{label}</span>
+    <span class="text-slate-500 absolute w-fit h-fit top-[0] left-4 right-[0] bottom-[0] m-auto !ml-0" class:small={st.focused || st.value}>{label}</span>
   {/if}
-  <input type="text" placeholder={props.placeholder} class="w-full outline-none block bg-transparent leading-[32px] text-[var(--fc)]" bind:value={data.value} onfocus={onFocus} onblur={onBlur}>
-  <div class="line"></div>
+  <input type="text" placeholder={props.placeholder} class="w-full outline-none block bg-transparent leading-[32px] text-[var(--fc)]" bind:value={st.value} onfocus={onFocus} onblur={onBlur}>
+  <Popover target={st.root} visible={st.focused} class="w-[100%] p-2" --w={st.w}>
+    <VirtualList>{@render children?.()}</VirtualList>
+  </Popover>
 </div>
 
 <style lang="scss">
-  $t: .2s;
+  $t: .3s;
+
   .group {
+    transition: border-width .2s linear;
+
     & > span {
       transition: transform $t, color $t;
       transform-origin: top left;
@@ -45,8 +66,29 @@
       transform: scale(.8) translateY(-70%);
     }
 
-    &::after {
+    &:hover {
+      &::before {
+        height: 1.5px;
+      }
+    }
+
+    &::before {
       height: 1.2px;
+      width: 100%;
+      background-color: currentColor;
+      transition: height $t ease;
+      position: absolute;
+      bottom: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      margin: auto auto 0 auto;
+      content: "";
+      display: block;
+    }
+
+    &::after {
+      height: 1.5px;
       width: 0;
       background-color: var(--color, currentColor);
       transition: width $t ease;
@@ -62,6 +104,7 @@
 
     &.focused {
       border-color: var(--color, currentColor);
+
       &::after {
         width: 100%;
       }

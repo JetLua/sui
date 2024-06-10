@@ -64,3 +64,33 @@ export function dispatch(e: KeyboardEvent) {
     target.dispatchEvent(new MouseEvent('click', {view: window, bubbles: true, cancelable: true}))
   }
 }
+
+export function debounce<T extends (...args: any[]) => void>(fn: T, t = .2) {
+  let id: ReturnType<typeof setTimeout>
+
+  return (...args: Parameters<typeof fn>) => {
+    clearTimeout(id)
+    id = setTimeout(() => fn(...args), t * 1e3)
+  }
+}
+
+export function contains(parent: HTMLElement, target: HTMLElement) {
+  if (!parent) return false
+
+  if (parent === target || parent.contains(target)) return true
+
+  if (parent.childElementCount) {
+    const queue = Array.from(parent.children)
+    while (queue.length) {
+      const item = queue.pop()
+
+      if (item?.contains(target) || item === target) return true
+
+      if (item?.childElementCount) {
+        queue.push(...Array.from(item.children))
+      }
+    }
+  }
+
+  return false
+}

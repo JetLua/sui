@@ -1,0 +1,9 @@
+@layer utilities {
+  .as-button {
+    @apply focus:[&:not(:focus-visible)]:outline-none;
+  }
+
+  .shadow-popover {
+    box-shadow: 0 2px 6px 2px #d0d0d0;
+  }
+}
