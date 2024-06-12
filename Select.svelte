@@ -8,6 +8,7 @@
   interface Props extends HTMLSelectAttributes {
     children?: Snippet
     label?: string
+    items: any[]
   }
 
   const {children, label, ...props}: Props = $props()
@@ -45,10 +46,14 @@
     <span class="text-slate-500 absolute w-fit h-fit top-[0] left-4 right-[0] bottom-[0] m-auto !ml-0" class:small={st.focused || st.value}>{label}</span>
   {/if}
   <input type="text" placeholder={props.placeholder} class="w-full outline-none block bg-transparent leading-[32px] text-[var(--fc)]" bind:value={st.value} onfocus={onFocus} onblur={onBlur}>
-  <Popover target={st.root} visible={st.focused} class="w-[100%] p-2" --w={st.w}>
-    <VirtualList>{@render children?.()}</VirtualList>
+  <Popover anchor={['left', 'auto']} target={st.root} visible={true} class="w-[100%] py-2" --w={st.w}>
+    <VirtualList items={props.items} item={item} class="max-h-[200px] overflow-auto"></VirtualList>
   </Popover>
 </div>
+
+{#snippet item(s: string)}
+  <p class="text-indigo-400 leading-10 hover:bg-indigo-100 cursor-pointer px-2">{s}</p>
+{/snippet}
 
 <style lang="scss">
   $t: .3s;

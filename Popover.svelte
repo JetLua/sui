@@ -11,12 +11,20 @@
     target: HTMLElement
     visible?: boolean
     auto?: boolean
+    anchor?: ['left' | 'right' | 'auto', 'top' | 'bottom' | 'auto']
   }
 
-  let {class: _class, target, visible = $bindable(false), children, auto}: Props = $props()
+  let {
+    class: _class,
+    target,
+    visible = $bindable(false),
+    children,
+    auto,
+    anchor = $bindable(['auto', 'auto'])
+  }: Props = $props()
 
   let root = $state<HTMLElement>()
-  let origin = ['', ''] as [string, string]
+  // let origin = ['', ''] as [string, string]
   let position = $state({left: 'auto', right: 'auto', top: 'auto', bottom: 'auto'} satisfies Record<string, string>)
 
   function onClick() {
@@ -40,19 +48,19 @@
     // 偏左
     if ((left + right) / 2 <= w / 2) {
       position.left = `${left}px`
-      origin[0] = `${tw / 2}px`
+      if (anchor[0] === 'auto') anchor[0] = `left`
     } else {
       position.right = `${w - right}px`
-      origin[0] = `calc(100% - ${tw / 2}px)`
+      if (anchor[0] === 'auto') anchor[0] = `right`
     }
 
     // 偏上
     if ((top + bottom) / 2 <= h / 2) {
       position.top = `${bottom + 10}px`
-      origin[1] = 'top'
+      if (anchor[1] === 'auto') anchor[1] = 'top'
     } else {
       position.bottom = `${h - top + 10}px`
-      origin[1] = 'bottom'
+      if (anchor[1] === 'auto') anchor[1] = 'bottom'
     }
   }
 
@@ -60,7 +68,7 @@
     return {
       duration: params?.duration ?? 200,
       easing: params?.easing ?? cubicInOut,
-      css: t => `transform-origin: ${origin.join(' ')}; transform: scale(${t}, ${t});`
+      css: t => `transform-origin: ${anchor.join(' ')}; transform: scale(${t}, ${t});`
     }
   }
 
@@ -86,7 +94,7 @@
 <svelte:window on:click={onGlobalClick} on:resize={onResize}/>
 
 {#if visible}
-  <section class={clsx('fixed bg-white rounded-md shadow-popover z-10 w-[var(--w,inherit)]', _class)}
+  <section class={clsx('fixed bg-white rounded-md shadow-popover z-10 w-[var(--w,inherit)] overflow-auto', _class)}
     style:top={position.top}
     style:left={position.left}
     style:right={position.right}

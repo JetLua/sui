@@ -5,9 +5,10 @@
 
   interface Props extends Partial<HTMLButtonAttributes> {
     children?: Snippet
+    self?: HTMLButtonElement
   }
 
-  const {children, ...props}: Props = $props()
+  let {children, self = $bindable(), ...props}: Props = $props()
 </script>
 
-<Ripple class="w-fit rounded-md"><button class="z-[1] relative px-6 text-[var(--fc,white)] py-2" {...props}>{@render children?.()}</button></Ripple>
+<Ripple class="w-fit rounded-md"><button bind:this={self} class="z-[1] relative px-6 text-[var(--fc,white)] py-2" {...props}>{@render children?.()}</button></Ripple>
