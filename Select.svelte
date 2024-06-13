@@ -47,7 +47,7 @@
   {/if}
   <input type="text" placeholder={props.placeholder} class="w-full outline-none block bg-transparent leading-[32px] text-[var(--fc)]" bind:value={st.value} onfocus={onFocus} onblur={onBlur}>
   <Popover anchor={['left', 'auto']} target={st.root} visible={true} class="w-[100%] py-2" --w={st.w}>
-    <VirtualList items={props.items} item={item} class="max-h-[200px] overflow-auto"></VirtualList>
+    <VirtualList items={props.items} item={item} class="h-[200px] overflow-auto"></VirtualList>
   </Popover>
 </div>
 
