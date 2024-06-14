@@ -1,22 +1,27 @@
 <script lang="ts" generics="T">
   import {onMount, tick, type Snippet} from 'svelte'
   import type {HTMLAttributes} from 'svelte/elements'
+    import {dispatch} from './util'
 
   interface Props extends HTMLAttributes<HTMLDivElement> {
-    item: Snippet<[T]>
+    item: Snippet<[T, number]>
     items: T[]
+    selected?: number
+    onSelect?: (item: T, index: number) => void
+    filter?: (item: T) => boolean
   }
 
-  const {children, items, ...props}: Props = $props()
+  let {children, selected = $bindable(-1), ...props}: Props = $props()
 
   const st = $state({
     mounted: false,
   })
 
+  const items = $derived(props.filter ? props.items.filter(props.filter) : props.items)
+
   const vp = $state({
     el: null as unknown as HTMLElement,
     h: 0,
-    st: 0,
     end: 0,
     top: 0,
     start: 0,
@@ -25,8 +30,6 @@
     content: null as unknown as HTMLElement
   })
 
-  const total = $derived(items.length)
-
   const visible = $derived.by(() => {
     return items.slice(vp.start, vp.end).map((item, i) => {
       return {index: i + vp.start, data: item}
@@ -34,7 +37,7 @@
   })
 
   $effect(() => {
-    if (st.mounted) refresh()
+    if (st.mounted) refresh(items, vp.h)
   })
 
   onMount(() => {
@@ -46,7 +49,7 @@
   let rows: HTMLCollection
   let ah = 0
 
-  async function refresh() {
+  async function refresh(items: Props['items'], vh: number) {
     const {scrollTop} = vp.el
 
     await tick()
@@ -54,7 +57,7 @@
     let ch = vp.top - scrollTop
     let i = vp.start
 
-    while (ch < vp.h && i < items.length) {
+    while (ch < vh && i < items.length) {
       let row = rows[i - vp.start]
 
       if (!row) {
@@ -140,13 +143,21 @@
     st.mounted = true
   })
 
-  $inspect(vp.top, vp.bottom)
+  function onSelect(data: T, index: number) {
+    props.onSelect?.(data, index)
+    selected = index
+  }
 </script>
 
 <div class={props.class} bind:offsetHeight={vp.h} onscroll={onScroll} bind:this={vp.el}>
   <div bind:this={vp.content} style:padding-top={`${vp.top}px`} style:padding-bottom={`${vp.bottom}px`}>
-    {#each visible as item (item.index)}
-      <div>{@render props.item(item.data)}</div>
+    {#each visible as {data, index} (index)}
+      <div
+        onclick={() => onSelect(data, index)}
+        onkeydown={dispatch}
+        role="button"
+        class="as-button"
+        tabindex="0">{@render props.item(data, index)}</div>
     {/each}
   </div>
 </div>

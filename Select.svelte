@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="ts" generics="T">
   import clsx from 'clsx'
   import {onMount, type Snippet} from 'svelte'
   import type {HTMLSelectAttributes} from 'svelte/elements'
@@ -8,27 +8,30 @@
   interface Props extends HTMLSelectAttributes {
     children?: Snippet
     label?: string
-    items: any[]
+    items: T[]
+    filter?: (item: T) => boolean
+    value?: T
+    index?: number
   }
 
-  const {children, label, ...props}: Props = $props()
+  let {children, label, value = $bindable(), index = $bindable(), ...props}: Props = $props()
 
   const st = $state({
     focused: false,
-    value: '',
     root: null as unknown as HTMLElement,
-    w: ''
+    w: '',
+    visible: false,
+    inputEl: null as unknown as HTMLElement,
   })
 
   function onFocus() {
     st.focused = true
+    st.visible = true
   }
 
   function onBlur() {
     st.focused = false
   }
-
-
 
   onMount(() => {
     const resizeObserver = new ResizeObserver(entries => {
@@ -43,16 +46,31 @@
 
 <div bind:this={st.root} class={clsx('group relative inline-block rounded-t-md overflow-hidden bg-[var(--bg,transparent)] pt-5 pb-0', st.focused && 'focused', label ? 'pt-5' : 'pt-2', props.class)}>
   {#if label}
-    <span class="text-slate-500 absolute w-fit h-fit top-[0] left-4 right-[0] bottom-[0] m-auto !ml-0" class:small={st.focused || st.value}>{label}</span>
+    <span class="text-slate-500 absolute w-fit h-fit top-[0] left-4 right-[0] bottom-[0] m-auto !ml-0" class:small={st.focused || value}>{label}</span>
   {/if}
-  <input type="text" placeholder={props.placeholder} class="w-full outline-none block bg-transparent leading-[32px] text-[var(--fc)]" bind:value={st.value} onfocus={onFocus} onblur={onBlur}>
-  <Popover anchor={['left', 'auto']} target={st.root} visible={true} class="w-[100%] py-2" --w={st.w}>
-    <VirtualList items={props.items} item={item} class="h-[200px] overflow-auto"></VirtualList>
+  <input readonly bind:this={st.inputEl} type="text" placeholder={props.placeholder} class="w-full outline-none block bg-transparent leading-[32px] text-[var(--fc)]" bind:value onfocus={onFocus} onblur={onBlur}>
+  <Popover
+    anchor={['left', 'auto']}
+    target={st.root}
+    visible={st.visible}
+    class="w-[100%] py-2"
+    --w={st.w}
+    onClose={() => st.visible = false}>
+    <VirtualList
+      items={props.items}
+      item={item}
+      class="h-[200px] overflow-auto"
+      onSelect={(item, i) => {
+        st.visible = false
+        value = item
+        index = i
+      }}
+      filter={props.filter}></VirtualList>
   </Popover>
 </div>
 
-{#snippet item(s: string)}
-  <p class="text-indigo-400 leading-10 hover:bg-indigo-100 cursor-pointer px-2">{s}</p>
+{#snippet item(s: T, i: number)}
+  <p class="text-indigo-400 leading-10 hover:bg-sky-100 cursor-pointer px-2" class:bg-indigo-100={i === index}>{s}</p>
 {/snippet}
 
 <style lang="scss">

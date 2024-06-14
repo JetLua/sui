@@ -12,6 +12,7 @@
     visible?: boolean
     auto?: boolean
     anchor?: ['left' | 'right' | 'auto', 'top' | 'bottom' | 'auto']
+    onClose?: () => void
   }
 
   let {
@@ -20,11 +21,11 @@
     visible = $bindable(false),
     children,
     auto,
-    anchor = $bindable(['auto', 'auto'])
+    anchor = $bindable(['auto', 'auto']),
+    onClose
   }: Props = $props()
 
   let root = $state<HTMLElement>()
-  // let origin = ['', ''] as [string, string]
   let position = $state({left: 'auto', right: 'auto', top: 'auto', bottom: 'auto'} satisfies Record<string, string>)
 
   function onClick() {
@@ -64,23 +65,21 @@
     }
   }
 
-  function show(node: HTMLElement, params?: {duration?: number, easing?: EasingFunction}): TransitionConfig {
-    return {
-      duration: params?.duration ?? 200,
-      easing: params?.easing ?? cubicInOut,
-      css: t => `transform-origin: ${anchor.join(' ')}; transform: scale(${t}, ${t});`
-    }
-  }
-
   function onGlobalClick(e: MouseEvent) {
-    if (!auto) return
     const _target = e.target as HTMLElement
     if (!_target) return
+
+    const inner = root && (contains(root, _target) || contains(target, _target))
+
+    if (!auto) {
+      if (!inner) onClose?.()
+      return
+    }
 
     // 点击是 target
     if (contains(target, _target)) return onClick()
 
-    if (root && contains(root, _target)) return
+    if (inner) return
 
     // popover 外部点击则隐藏
     visible = false
@@ -93,14 +92,28 @@
 
 <svelte:window on:click={onGlobalClick} on:resize={onResize}/>
 
-{#if visible}
-  <section class={clsx('fixed bg-white rounded-md shadow-popover z-10 w-[var(--w,inherit)] overflow-auto', _class)}
-    style:top={position.top}
-    style:left={position.left}
-    style:right={position.right}
-    style:bottom={position.bottom}
-    transition:show|local={{duration: 3e2}}
-    bind:this={root}>
-    {@render children()}
-  </section>
-{/if}
+<section class={clsx('root fixed bg-white rounded-md shadow-popover z-10 w-[var(--w,inherit)] overflow-auto', _class, visible ? 'block' : 'hidden')}
+  style:top={position.top}
+  style:left={position.left}
+  style:right={position.right}
+  style:bottom={position.bottom}
+  style:transform-origin={anchor.join(' ')}
+  bind:this={root}>
+  {@render children()}
+</section>
+
+<style lang="scss">
+  .root {
+    animation: x .3s ease forwards;
+
+    @keyframes x {
+      from {
+        transform: scale(0);
+      }
+
+      to {
+        transform: scale(1);
+      }
+    }
+  }
+</style>
