@@ -1,6 +1,6 @@
 <script lang="ts">
   import clsx from 'clsx'
-  import {onMount, type Snippet} from 'svelte'
+  import {onMount, tick, type Snippet} from 'svelte'
   import {cubicInOut} from 'svelte/easing'
   import type {EasingFunction, TransitionConfig} from 'svelte/transition'
   import {contains, debounce} from './util'
@@ -16,16 +16,19 @@
   }
 
   let {
-    class: _class,
     target,
-    visible = $bindable(false),
+    visible = false,
     children,
     auto,
-    anchor = $bindable(['auto', 'auto']),
-    onClose
+    anchor = ['auto', 'auto'],
+    onClose,
+    ...props
   }: Props = $props()
 
-  let root = $state<HTMLElement>()
+  const st = $state({
+    root: null as unknown as HTMLElement
+  })
+
   let position = $state({left: 'auto', right: 'auto', top: 'auto', bottom: 'auto'} satisfies Record<string, string>)
 
   function onClick() {
@@ -39,7 +42,6 @@
     // 计算位置
     const {innerHeight: h, innerWidth: w} = window
     const {bottom, left, right, top} = target.getBoundingClientRect()
-    const tw = right - left
 
     position.top = 'auto'
     position.left = 'auto'
@@ -49,10 +51,10 @@
     // 偏左
     if ((left + right) / 2 <= w / 2) {
       position.left = `${left}px`
-      if (anchor[0] === 'auto') anchor[0] = `left`
+      if (anchor[0] === 'auto') anchor[0] = 'left'
     } else {
       position.right = `${w - right}px`
-      if (anchor[0] === 'auto') anchor[0] = `right`
+      if (anchor[0] === 'auto') anchor[0] = 'right'
     }
 
     // 偏上
@@ -69,7 +71,7 @@
     const _target = e.target as HTMLElement
     if (!_target) return
 
-    const inner = root && (contains(root, _target) || contains(target, _target))
+    const inner = st.root && (contains(st.root, _target) || contains(target, _target))
 
     if (!auto) {
       if (!inner) onClose?.()
@@ -85,20 +87,22 @@
     visible = false
   }
 
-  const onResize = debounce(calc)
+  onMount(() => {
+    calc()
+  })
 
-  onMount(calc)
+  const onResize = debounce(calc)
 </script>
 
 <svelte:window on:click={onGlobalClick} on:resize={onResize}/>
 
-<section class={clsx('root fixed bg-white rounded-md shadow-popover z-10 w-[var(--w,inherit)] overflow-auto', _class, visible ? 'block' : 'hidden')}
+<section class={clsx('root fixed bg-white rounded-md shadow-popover z-10 min-w-[var(--w)] width-[fit-content] overflow-auto', props.class, visible ? 'block' : 'hidden')}
   style:top={position.top}
   style:left={position.left}
   style:right={position.right}
   style:bottom={position.bottom}
   style:transform-origin={anchor.join(' ')}
-  bind:this={root}>
+  bind:this={st.root}>
   {@render children()}
 </section>
 

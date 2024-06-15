@@ -2,6 +2,8 @@
   import clsx from 'clsx'
   import {onMount, type Snippet} from 'svelte'
   import type {HTMLSelectAttributes} from 'svelte/elements'
+  import {dispatch} from './util'
+
   import VirtualList from './VirtualList.svelte'
   import Popover from './Popover.svelte'
 
@@ -25,35 +27,43 @@
   })
 
   function onFocus() {
-    st.focused = true
     st.visible = true
+    st.focused = true
   }
 
   function onBlur() {
     st.focused = false
+    // st.visible = false
   }
 
   onMount(() => {
-    const resizeObserver = new ResizeObserver(entries => {
+    const observer = new ResizeObserver(entries => {
       st.w = `${entries[0].contentRect.width}px`
     })
 
-    resizeObserver.observe(st.root)
+    observer.observe(st.root)
 
-    return () => resizeObserver.disconnect()
+    return observer.disconnect.bind(observer)
   })
 </script>
 
-<div bind:this={st.root} class={clsx('group relative inline-block rounded-t-md overflow-hidden bg-[var(--bg,transparent)] pt-5 pb-0', st.focused && 'focused', label ? 'pt-5' : 'pt-2', props.class)}>
+<div
+  bind:this={st.root}
+  class={clsx('group as-button relative inline-block rounded-t-md overflow-hidden bg-[var(--bg,transparent)] pb-0', st.focused && 'focused', label ? 'pt-5' : 'pt-2', props.class)}
+  onkeydown={dispatch}
+  tabindex="0"
+  role="button"
+  onblur={onBlur}
+  onfocus={onFocus}>
   {#if label}
     <span class="text-slate-500 absolute w-fit h-fit top-[0] left-4 right-[0] bottom-[0] m-auto !ml-0" class:small={st.focused || value}>{label}</span>
   {/if}
-  <input readonly bind:this={st.inputEl} type="text" placeholder={props.placeholder} class="w-full outline-none block bg-transparent leading-[32px] text-[var(--fc)]" bind:value onfocus={onFocus} onblur={onBlur}>
+  <input readonly bind:this={st.inputEl} tabindex="-1" type="text" placeholder={props.placeholder} class="w-full outline-none block bg-transparent leading-[32px] text-[var(--fc)] pointer-events-none" bind:value>
   <Popover
     anchor={['left', 'auto']}
     target={st.root}
     visible={st.visible}
-    class="w-[100%] py-2"
+    class="py-2"
     --w={st.w}
     onClose={() => st.visible = false}>
     <VirtualList
