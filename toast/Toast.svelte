@@ -58,12 +58,12 @@
     color: var(--color, #fff);
     font-size: var(--font-size, .9rem);
     width: fit-content;
-    padding: 0 1rem;
+    padding: 0;
     min-width: 8rem;
     margin: 1rem auto 0;
     max-width: 40rem;
     border-radius: var(--border-radius, .2rem);
-    height: 3rem;
+    height: 2.5rem;
     display: flex;
     align-items: center;
     overflow: hidden;
@@ -71,8 +71,8 @@
 
     svg {
       margin-left: 1rem;
-      width: var(--icon-width, var(--icon-size, 22px));
-      height: var(--icon-height, var(--icon-size, 22px));
+      width: var(--icon-width, var(--icon-size, 1.4rem));
+      height: var(--icon-height, var(--icon-size, 1.4rem));
       stroke: var(--icon-color, #fff);
       pointer-events: auto;
       cursor: pointer;
