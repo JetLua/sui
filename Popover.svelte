@@ -48,6 +48,8 @@
     position.right = 'auto'
     position.bottom = 'auto'
 
+    console.log(left, top, right)
+
     // 偏左
     if ((left + right) / 2 <= w / 2) {
       position.left = `${left}px`
@@ -92,11 +94,15 @@
   })
 
   const onResize = debounce(calc)
+
+  $effect.pre(() => {
+    if (visible) calc()
+  })
 </script>
 
 <svelte:window on:click={onGlobalClick} on:resize={onResize}/>
 
-<section class={clsx('root fixed bg-white rounded-md shadow-popover z-10 min-w-[var(--w)] width-[fit-content] overflow-auto', props.class, visible ? 'block' : 'hidden')}
+<section class={clsx('root fixed bg-white rounded-md shadow-popover z-10 min-w-[var(--w)] width-[fit-content]', props.class, visible ? 'block' : 'hidden')}
   style:top={position.top}
   style:left={position.left}
   style:right={position.right}
@@ -107,17 +113,5 @@
 </section>
 
 <style lang="scss">
-  .root {
-    animation: x .3s ease forwards;
 
-    @keyframes x {
-      from {
-        transform: scale(0);
-      }
-
-      to {
-        transform: scale(1);
-      }
-    }
-  }
 </style>
