@@ -2,53 +2,65 @@
   import clsx from 'clsx'
   import {onMount, tick, type Snippet} from 'svelte'
   import {cubicInOut} from 'svelte/easing'
+  import type {HTMLAttributes} from 'svelte/elements'
   import type {EasingFunction, TransitionConfig} from 'svelte/transition'
   import {contains, debounce} from './util'
 
-  interface Props {
+  import Ae from './Ae.svelte'
+
+  interface Props extends HTMLAttributes<HTMLElement> {
     children: Snippet
     class?: string
-    target: HTMLElement
     visible?: boolean
     auto?: boolean
     anchor?: ['left' | 'right' | 'auto', 'top' | 'bottom' | 'auto']
     onClose?: () => void
+    content: Snippet
+    trigger?: 'click' | 'hover' | 'manual'
   }
 
   let {
-    target,
-    visible = false,
+    visible = $bindable(false),
     children,
     auto,
     anchor = ['auto', 'auto'],
+    trigger = 'click',
     onClose,
+    content,
     ...props
   }: Props = $props()
 
   const st = $state({
-    root: null as unknown as HTMLElement
+    root: null as unknown as HTMLElement,
   })
+
+  let target = $state<HTMLElement>()!
 
   let position = $state({left: 'auto', right: 'auto', top: 'auto', bottom: 'auto'} satisfies Record<string, string>)
 
   function onClick() {
-    visible = !visible
-    if (!visible) return
-    calc()
+
   }
+
+  function show(node: HTMLElement, params?: {duration?: number, easing?: EasingFunction}): TransitionConfig {
+    return {
+      duration: params?.duration ?? 200,
+      easing: params?.easing ?? cubicInOut,
+      css: t => `transform-origin: ${anchor.join(' ')}; transform: scale(${t}, ${t});`
+    }
+  }
+
 
   const calc = function() {
     if (!target) return
     // 计算位置
     const {innerHeight: h, innerWidth: w} = window
-    const {bottom, left, right, top} = target.getBoundingClientRect()
+    const {bottom, left, right, top} = target.firstElementChild!.getBoundingClientRect()
 
     position.top = 'auto'
     position.left = 'auto'
     position.right = 'auto'
     position.bottom = 'auto'
-
-    console.log(left, top, right)
 
     // 偏左
     if ((left + right) / 2 <= w / 2) {
@@ -69,49 +81,54 @@
     }
   }
 
-  function onGlobalClick(e: MouseEvent) {
-    const _target = e.target as HTMLElement
-    if (!_target) return
-
-    const inner = st.root && (contains(st.root, _target) || contains(target, _target))
-
-    if (!auto) {
-      if (!inner) onClose?.()
-      return
-    }
-
-    // 点击是 target
-    if (contains(target, _target)) return onClick()
-
-    if (inner) return
-
-    // popover 外部点击则隐藏
-    visible = false
-  }
-
   onMount(() => {
     calc()
   })
 
   const onResize = debounce(calc)
 
-  $effect.pre(() => {
-    if (visible) calc()
-  })
+  function handle(e: Event) {
+    if (e instanceof MouseEvent) {
+      switch (e.type) {
+        case 'mouseenter': {
+          if (e.currentTarget === target && trigger === 'hover') visible = true
+          break
+        }
+
+        case 'pointerdown': {
+          if ((e.target as HTMLElement).dataset.id === 'shadow') visible = false
+          break
+        }
+
+        default: {
+          console.log(e.type)
+        }
+      }
+    }
+  }
 </script>
 
-<svelte:window on:click={onGlobalClick} on:resize={onResize}/>
+<svelte:window on:resize={onResize}/>
 
-<section class={clsx('root fixed bg-white rounded-md shadow-popover z-10 min-w-[var(--w)] width-[fit-content]', props.class, visible ? 'block' : 'hidden')}
-  style:top={position.top}
-  style:left={position.left}
-  style:right={position.right}
-  style:bottom={position.bottom}
-  style:transform-origin={anchor.join(' ')}
-  bind:this={st.root}>
+<Ae class="contents"
+  onclick={handle}
+  bind:root={target}
+  onmouseenter={handle}>
   {@render children()}
-</section>
+</Ae>
 
-<style lang="scss">
-
-</style>
+{#if visible}
+<div class="fixed top-0 left-0 w-full h-full z-[99999] bg-transparent"
+  onpointerdown={handle} tabindex="-1" data-id="shadow">
+  <section class={clsx('root fixed bg-white rounded-md shadow-popover z-10 min-w-[var(--w)] width-[fit-content]', props.class)}
+    style:top={position.top}
+    style:left={position.left}
+    style:right={position.right}
+    style:bottom={position.bottom}
+    style:transform-origin={anchor.join(' ')}
+    transition:show
+    bind:this={st.root}>
+    {@render content()}
+  </section>
+</div>
+{/if}
