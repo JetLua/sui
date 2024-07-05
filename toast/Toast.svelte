@@ -58,10 +58,11 @@
     color: var(--color, #fff);
     font-size: var(--font-size, .9rem);
     width: fit-content;
-    padding: 0;
+    padding: .5rem 1rem;
     min-width: 8rem;
     margin: 1rem auto 0;
-    max-width: 40rem;
+    white-space: wrap;
+    max-width: 20rem;
     border-radius: var(--border-radius, .2rem);
     height: 2.5rem;
     display: flex;
