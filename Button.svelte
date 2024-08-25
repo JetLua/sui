@@ -1,9 +1,9 @@
 <script lang="ts">
   import clsx from 'clsx'
-  import chroma from 'chroma-js'
   import {type Snippet} from 'svelte'
-  import {ripple, colors, darken, alpha} from './core'
   import type {HTMLButtonAttributes} from 'svelte/elements'
+
+  import {ripple, colors, darken, alpha} from './core'
 
   interface Props extends HTMLButtonAttributes {
     children?: Snippet
@@ -23,7 +23,7 @@
   }: Props = $props()
 
   _class = clsx(
-    'relative px-4 py-2 rounded-md transition-[background] duration-300 hover:shadow-lg',
+    'relative px-4 py-2 rounded-md transition-[background,box-shadow] duration-300 hover:shadow disabled:bg-slate-200 disabled:border-slate-200 disabled:hover:shadow-none',
     variant === 'contained' ? 'text-white bg-[var(--bg)] hover:bg-[var(--hover-bg)] border border-solid border-[var(--bg)]' :
     variant === 'outlined' ? 'bg-transparent border border-solid border-[var(--bg)] text-[var(--bg)] hover:bg-[var(--outline-bg)]' : '',
     _class
@@ -37,6 +37,7 @@
   style:--hover-bg={darken(colors.primary)}
   style:--outline-bg={alpha(colors.primary)}
   style:--bg={colors.primary}
+  style:--shadow={alpha(colors.primary, 1)}
   class={_class}
   {disabled}
   {...props}>
@@ -48,7 +49,7 @@
       width="1.5rem">
       <circle
         stroke-dasharray="164.93361431346415 56.97787143782138"
-        r="35" stroke-width="10" stroke="#e15b64"
+        r="35" stroke-width="10" stroke="#fff"
         fill="none"
         cy="50" cx="50">
         <animateTransform
