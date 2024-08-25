@@ -8,9 +8,11 @@
   interface Props extends HTMLButtonAttributes {
     children?: Snippet
     class?: string
-    variant?: 'outlined' | 'contained' | 'text'
+    variant?: 'outlined' | 'contained'
     loading?: boolean
     disabled?: boolean
+    bgColor?: string
+    textColor?: string
   }
 
   let {
@@ -19,25 +21,32 @@
     variant = 'contained',
     disabled = false,
     loading = false,
+    bgColor,
+    textColor,
     ...props
   }: Props = $props()
 
   _class = clsx(
     'relative px-4 py-2 rounded-md transition-[background,box-shadow] duration-300 hover:shadow disabled:bg-slate-200 disabled:border-slate-200 disabled:hover:shadow-none',
-    variant === 'contained' ? 'text-white bg-[var(--bg)] hover:bg-[var(--hover-bg)] border border-solid border-[var(--bg)]' :
-    variant === 'outlined' ? 'bg-transparent border border-solid border-[var(--bg)] text-[var(--bg)] hover:bg-[var(--outline-bg)]' : '',
+    variant === 'contained' ? 'text-[var(--text-color)] bg-[var(--bg-color)] hover:bg-[var(--hover-bg-color)] border border-solid border-[var(--bg-color)]' :
+    variant === 'outlined' ? 'bg-transparent border border-solid border-[var(--text-color)] text-[var(--text-color)] hover:bg-[var(--hover-bg-color)]' : '',
     _class
   )
 
   if (loading) disabled = true
+  textColor = textColor || (variant === 'contained' ? 'white' : colors.primary)
+  bgColor = bgColor || (variant === 'contained' ? colors.primary : '#0000')
+
+  const shadowColor = variant === 'contained' ? bgColor : textColor
+  const hoverBgColor = variant === 'contained' ? darken(bgColor) : alpha(textColor)
 </script>
 
 <button
   use:ripple
-  style:--hover-bg={darken(colors.primary)}
-  style:--outline-bg={alpha(colors.primary)}
-  style:--bg={colors.primary}
-  style:--shadow={alpha(colors.primary, 1)}
+  style:--text-color={textColor}
+  style:--hover-bg-color={hoverBgColor}
+  style:--bg-color={bgColor}
+  style:--shadow={alpha(shadowColor, 1)}
   class={_class}
   {disabled}
   {...props}>
