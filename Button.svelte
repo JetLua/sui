@@ -47,7 +47,7 @@
   style:--text-color={textColor}
   style:--hover-bg-color={hoverBgColor}
   style:--bg-color={bgColor}
-  style:--shadow={alpha(shadowColor, 1)}
+  style:--shadow={alpha(shadowColor, colors.shadowAlpha)}
   class={_class}
   {disabled}
   {...props}>

@@ -3,7 +3,9 @@ import type {Action} from 'svelte/action'
 
 
 export const colors = {
-  primary: '#8b5cf6'
+  primary: '#8b5cf6',
+  disabled: '#e2e8f0',
+  shadowAlpha: 1
 }
 
 export const ripple: Action = (e: HTMLElement) => {
@@ -21,5 +23,4 @@ export function darken(raw: string, v = .5) {
 
 export function alpha(raw: string, alpha = .1) {
   return chroma(raw).alpha(alpha).brighten().hex()
-
 }
