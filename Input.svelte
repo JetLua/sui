@@ -11,6 +11,8 @@
     variant?: 'outlined' | 'standard'
     loading?: boolean
     disabled?: boolean
+    textColor?: string
+    borderColor?: string
   }
 
   let {
@@ -19,23 +21,32 @@
     variant = 'standard',
     disabled = false,
     loading = false,
+    borderColor,
+    textColor,
     ...props
   }: Props = $props()
 
   _class = clsx(
-    'relative px-0 py-2 outline-none text-stone-600 duration-300',
+    'relative px-0 py-2 outline-none text-[var(--text-color)] duration-300',
     variant === 'standard' ? 'border-b border-solid border-slate-400' : '',
     _class
   )
 
   const rootClass = clsx('inline-block relative',
-    variant === 'standard' ? 'after:block after:absolute after:left-0 after:bottom-0 after:right-0 after:m-auto after:content-[""] after:w-0 after:h-[2px] focus-within:after:w-[100%] after:bg-[var(--primary)] after:transition-[width] after:duration-200 after:ease-[ease]' : ''
+    variant === 'standard' ? 'after:block after:absolute after:left-0 after:bottom-0 after:right-0 after:m-auto after:content-[""] after:w-0 after:h-[2px] focus-within:after:w-[100%] after:bg-[var(--border-color)] after:transition-[width] after:duration-200 after:ease-[ease]' : ''
   )
 
   if (loading) disabled = true
+
+  textColor = textColor || '#57534e'
+  borderColor = borderColor || colors.primary
 </script>
 
 <div class={rootClass}
-  style:--primary={colors.primary}>
-  <input class={_class} {...props}>
+  style:--border-color={borderColor}>
+  <input
+    class={_class}
+    style:--text-color={textColor}
+    {...props}
+  >
 </div>

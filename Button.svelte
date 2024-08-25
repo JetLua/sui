@@ -34,6 +34,7 @@
   )
 
   if (loading) disabled = true
+
   textColor = textColor || (variant === 'contained' ? 'white' : colors.primary)
   bgColor = bgColor || (variant === 'contained' ? colors.primary : '#0000')
 
