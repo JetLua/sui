@@ -27,7 +27,7 @@
   const shadowColor = $derived(alpha(_color, colors.shadowAlpha))
 
   const rootClass = $derived.by(() => {
-    const cls = ['w-fit h-fit rounded-[4px] aspect-square border-2 border-solid border-[var(--color)] p-0 transition-[box-shadow] duration-300 ease-[ease]'] as string[]
+    const cls = ['w-fit h-fit rounded-[4px] aspect-square border-2 border-solid border-[var(--color)] p-0 transition-[box-shadow,background-color] duration-300 ease-[ease]'] as string[]
 
     if (checked) cls.push('bg-[var(--color)]')
     if (!disabled) cls.push('hover:shadow')
