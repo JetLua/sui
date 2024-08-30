@@ -13,6 +13,7 @@
     disabled?: boolean
     textColor?: string
     borderColor?: string
+    value?: string
   }
 
   let {
@@ -23,6 +24,7 @@
     loading = false,
     borderColor,
     textColor,
+    value = $bindable(),
     ...props
   }: Props = $props()
 
@@ -45,6 +47,7 @@
 <div class={rootClass}
   style:--border-color={borderColor}>
   <input
+    bind:value={value}
     class={_class}
     style:--text-color={textColor}
     {...props}

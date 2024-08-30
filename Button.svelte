@@ -6,14 +6,14 @@
   import {ripple, colors, darken, alpha} from './core'
 
   interface Props extends HTMLButtonAttributes {
+    ref?: HTMLButtonElement
     children?: Snippet
     class?: string
-    variant?: 'outlined' | 'contained'
+    variant?: 'outlined' | 'contained' | 'text'
     loading?: boolean
     disabled?: boolean
     bgColor?: string
     textColor?: string
-    size?: 'small' | 'normal' | 'large'
   }
 
   let {
@@ -24,13 +24,14 @@
     loading = false,
     bgColor,
     textColor,
+    ref = $bindable(),
     ...props
   }: Props = $props()
 
   _class = clsx(
-    'relative px-4 py-2 rounded-md transition-[background,box-shadow] duration-300 hover:shadow disabled:bg-slate-200 disabled:border-slate-200 disabled:hover:shadow-none',
-    variant === 'contained' ? 'text-[var(--text-color)] bg-[var(--bg-color)] hover:bg-[var(--hover-bg-color)] border border-solid border-[var(--bg-color)]' :
-    variant === 'outlined' ? 'bg-transparent border border-solid border-[var(--text-color)] text-[var(--text-color)] hover:bg-[var(--hover-bg-color)]' : '',
+    'relative uppercase px-4 py-2 rounded-md transition-[background,box-shadow] duration-300 disabled:bg-slate-200 disabled:border-slate-200 disabled:hover:shadow-none',
+    variant === 'outlined' ? 'hover:shadow bg-transparent border border-solid border-[var(--text-color)] text-[var(--text-color)] hover:bg-[var(--hover-bg-color)]' :
+    variant === 'text' ? 'hover:bg-[var(--hover-bg-color)] text-[var(--text-color)]' : 'hover:shadow text-[var(--text-color)] bg-[var(--bg-color)] hover:bg-[var(--hover-bg-color)] border border-solid border-[var(--bg-color)]',
     _class
   )
 
@@ -44,6 +45,7 @@
 </script>
 
 <button
+  bind:this={ref}
   use:ripple
   style:--text-color={textColor}
   style:--hover-bg-color={hoverBgColor}

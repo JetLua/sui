@@ -2,6 +2,6 @@
 
 @layer base {
   .shadow {
-    box-shadow: 0 0 .3rem 0 var(--shadow);
+    box-shadow: 0 0 .3rem 0 var(--shadow, #bdbdbd);
   }
 }

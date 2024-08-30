@@ -24,3 +24,9 @@ export function darken(raw: string, v = .5) {
 export function alpha(raw: string, alpha = .1) {
   return chroma(raw).alpha(alpha).brighten().hex()
 }
+
+/** style object to string */
+export function toString(o: CSSStyleDeclaration): string
+export function toString(o: any) {
+  return Object.entries(o).map(([k, v]) => `${k}:${v}`).join(';')
+}

@@ -8,7 +8,7 @@
 
   let {class: _class, ...props}: Props = $props()
 
-  _class = clsx('stroke-[var(--stroke,#fc3)] fill-[var(--fill,transparent)]', _class)
+  _class = clsx('stroke-[var(--stroke,#999)] fill-[var(--fill,transparent)]', _class)
 </script>
 
 <svg
