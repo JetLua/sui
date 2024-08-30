@@ -13,6 +13,7 @@
     disabled?: boolean
     bgColor?: string
     textColor?: string
+    size?: 'small' | 'normal' | 'large'
   }
 
   let {
