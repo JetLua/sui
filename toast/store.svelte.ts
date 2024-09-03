@@ -14,6 +14,10 @@ toast.error = function(e: string | Error, duration?: number) {
   push(e instanceof Error ? e.message : e, {icon: 'error', duration})
 }
 
+toast.info = function(e: string, duration?: number) {
+  push(e, {icon: 'info', duration})
+}
+
 function push(msg: string, opts?: {icon?: Icon, duration?: number}) {
   const id = crypto.randomUUID()
   const duration = opts?.duration ?? 3

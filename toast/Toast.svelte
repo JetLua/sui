@@ -3,7 +3,7 @@
   import {slide} from 'svelte/transition'
   import type {Action} from 'svelte/action'
 
-  import {Check} from '../icon'
+  import {Check, Info, Error} from '../icon'
   import {msgs} from './store.svelte'
 
   let root: HTMLElement
@@ -20,12 +20,6 @@
     for (let i = 0; i < children.length; i++) {
       const c = children.item(i) as HTMLElement
       c.style.height = `${h}px`
-    }
-
-    return {
-      destroy() {
-        // todo
-      }
     }
   }
 
@@ -60,7 +54,6 @@
     }
 
     root.addEventListener('pointerenter', onEnter)
-
     root.addEventListener('pointerleave', onLeave)
 
     return () => {
@@ -80,7 +73,9 @@
       class="overflow-hidden item flex w-full bg-white p-2 py-4 shadow-lg border border-solid border-gray-200 rounded-md"
       style:--r={j}>
       {#if icon === 'success'}<Check class="fill-lime-600 stroke-white w-6 h-6 shrink-0 mr-2"/>{/if}
-      <span class="break-all text-stone-800 text-sm leading-6">{msg}{j}</span>
+      {#if icon === 'info'}<Info class="fill-slate-600 stroke-white w-6 h-6 shrink-0 mr-2"/>{/if}
+      {#if icon === 'error'}<Error class="fill-rose-500 stroke-white w-6 h-6 shrink-0 mr-2"/>{/if}
+      <span class="break-all text-stone-800 text-sm leading-6">{msg}</span>
     </p>
   {/each}
 </div>
