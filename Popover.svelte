@@ -8,19 +8,19 @@
   interface Props extends HTMLAttributes<HTMLElement> {
     target?: HTMLElement
     children?: Snippet
+    visible?: boolean
   }
 
-  const {target, ...props}: Props = $props()
+  let {target, visible = $bindable(false), ...props}: Props = $props()
 
   const snap = $state({
-    visible: false,
     style: {} as CSSStyleDeclaration
   })
 
   onMount(() => {
     if (!target) return
     target.addEventListener('click', () => {
-      snap.visible = !snap.visible
+      visible = !visible
       let r
       r = target.getBoundingClientRect()
       if (r.bottom > innerHeight / 2) {
@@ -40,11 +40,11 @@
   const click: MouseEventHandler<HTMLElement> = e => {
     const target = e.target as HTMLElement
     if (!target) return
-    if (target.dataset.id === 'root') snap.visible = false
+    if (target.dataset.id === 'root') visible = false
   }
 </script>
 
-{#if snap.visible}
+{#if visible}
   <AsButton class="w-[100vw] h-[100vh] fixed top-0 left-0 z-[999]" onclick={click} data-id="root">
     <div class="shadow w-fit rounded-md fixed bg-white" style={toString(snap.style)}>
       {@render props.children?.()}
