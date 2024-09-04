@@ -9,7 +9,7 @@
     ref?: HTMLButtonElement
     children?: Snippet
     class?: string
-    variant?: 'outlined' | 'contained' | 'text'
+    variant?: 'outlined' | 'contained' | 'text' | 'icon'
     loading?: boolean
     disabled?: boolean
     bgColor?: string
@@ -31,7 +31,8 @@
   _class = clsx(
     'relative uppercase px-4 py-2 rounded-md transition-[background,box-shadow] duration-300 disabled:bg-slate-200 disabled:border-slate-200 disabled:hover:shadow-none',
     variant === 'outlined' ? 'hover:shadow bg-transparent border border-solid border-[var(--text-color)] text-[var(--text-color)] hover:bg-[var(--hover-bg-color)]' :
-    variant === 'text' ? 'hover:bg-[var(--hover-bg-color)] text-[var(--text-color)]' : 'hover:shadow text-[var(--text-color)] bg-[var(--bg-color)] hover:bg-[var(--hover-bg-color)] border border-solid border-[var(--bg-color)]',
+    variant === 'text' ? 'hover:bg-[var(--hover-bg-color)] text-[var(--text-color)]' :
+    variant === 'icon' ? 'hover:bg-[var(--hover-bg-color)] text-[var(--text-color)] aspect-square !rounded-full !p-2' : 'hover:shadow text-[var(--text-color)] bg-[var(--bg-color)] hover:bg-[var(--hover-bg-color)] border border-solid border-[var(--bg-color)]',
     _class
   )
 
