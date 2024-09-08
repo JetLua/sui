@@ -39,6 +39,7 @@
 
   const click: MouseEventHandler<HTMLElement> = e => {
     const target = e.target as HTMLElement
+    e.stopPropagation()
     if (!target) return
     if (target.dataset.id === 'root') visible = false
   }
