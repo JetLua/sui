@@ -20,7 +20,7 @@
     children,
     class: _class,
     variant = 'contained',
-    disabled = false,
+    disabled: _disabled,
     loading = false,
     bgColor,
     textColor,
@@ -29,14 +29,14 @@
   }: Props = $props()
 
   _class = clsx(
-    'relative uppercase px-4 py-2 rounded-md transition-[background,box-shadow] duration-300 disabled:bg-slate-200 disabled:border-slate-200 disabled:hover:shadow-none',
+    'relative uppercase px-4 py-2 rounded-md transition-[background,box-shadow] duration-300 disabled:bg-slate-200 disabled:border-slate-200 disabled:hover:shadow-none flex items-center',
     variant === 'outlined' ? 'hover:shadow bg-transparent border border-solid border-[var(--text-color)] text-[var(--text-color)] hover:bg-[var(--hover-bg-color)]' :
     variant === 'text' ? 'hover:bg-[var(--hover-bg-color)] text-[var(--text-color)]' :
     variant === 'icon' ? 'hover:bg-[var(--hover-bg-color)] text-[var(--text-color)] aspect-square !rounded-full !p-2' : 'hover:shadow text-[var(--text-color)] bg-[var(--bg-color)] hover:bg-[var(--hover-bg-color)] border border-solid border-[var(--bg-color)]',
     _class
   )
 
-  if (loading) disabled = true
+  let disabled = $derived(_disabled ?? loading)
 
   textColor = textColor || (variant === 'contained' ? 'white' : colors.primary)
   bgColor = bgColor || (variant === 'contained' ? colors.primary : '#0000')
