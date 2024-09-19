@@ -38,6 +38,7 @@
 </script>
 
 <button
+  aria-label="checkbox"
   onclick={() => checked = !checked}
   disabled={disabled}
   style:--color={_color}
