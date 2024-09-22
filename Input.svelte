@@ -29,12 +29,12 @@
   }: Props = $props()
 
   _class = clsx(
-    'relative px-0 py-2 outline-none text-[var(--text-color)] duration-300',
+    'relative px-0 py-2 outline-none text-[var(--text-color)] duration-300 placeholder:text-sm placeholder:text-stone-400',
     variant === 'standard' ? 'border-b border-solid border-slate-400' : '',
     _class
   )
 
-  const rootClass = clsx('inline-block relative',
+  const rootClass = clsx('relative',
     variant === 'standard' ? 'after:block after:absolute after:left-0 after:bottom-0 after:right-0 after:m-auto after:content-[""] after:w-0 after:h-[2px] focus-within:after:w-[100%] after:bg-[var(--border-color)] after:transition-[width] after:duration-200 after:ease-[ease]' : ''
   )
 
@@ -53,3 +53,7 @@
     {...props}
   >
 </div>
+
+<style lang="scss">
+
+</style>
