@@ -30,7 +30,7 @@
 
   _class = clsx(
     'relative px-0 py-2 outline-none text-[var(--text-color)] duration-300 placeholder:text-sm placeholder:text-stone-400',
-    variant === 'standard' ? 'border-b border-solid border-slate-400' : '',
+    variant === 'standard' ? 'border-b border-solid border-slate-400 rounded-none' : '',
     _class
   )
 
