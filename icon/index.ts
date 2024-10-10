@@ -1,6 +1,7 @@
 export {default as Key} from './Key.svelte'
 export {default as Plus} from './Plus.svelte'
 export {default as Check} from './Check.svelte'
+export {default as XboxB} from './XboxB.svelte'
 export {default as FolderPlus} from './FolderPlus.svelte'
 export {default as FileUpload} from './FileUpload.svelte'
 export {default as Info} from './Info.svelte'
