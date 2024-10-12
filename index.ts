@@ -1,4 +1,5 @@
 export {colors} from './core'
+export {default as Digit} from './Digit.svelte'
 export {default as Input} from './Input.svelte'
 export {default as Switch} from './Switch.svelte'
 export {default as Button} from './Button.svelte'
