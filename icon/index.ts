@@ -1,4 +1,8 @@
 export {default as Key} from './Key.svelte'
+export {default as Club} from './Club.svelte'
+export {default as Spade} from './Spade.svelte'
+export {default as Heart} from './Heart.svelte'
+export {default as Diamond} from './Diamond.svelte'
 export {default as Plus} from './Plus.svelte'
 export {default as Check} from './Check.svelte'
 export {default as XboxB} from './XboxB.svelte'
