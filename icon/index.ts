@@ -1,4 +1,6 @@
 export {default as Key} from './Key.svelte'
+export {default as Google} from './Google.svelte'
+export {default as Github} from './Github.svelte'
 export {default as Club} from './Club.svelte'
 export {default as Spade} from './Spade.svelte'
 export {default as Heart} from './Heart.svelte'
