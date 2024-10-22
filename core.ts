@@ -10,11 +10,6 @@ export const colors = {
 
 export const ripple: Action = (e: HTMLElement) => {
 
-  return {
-    destroy() {
-
-    }
-  }
 }
 
 export function darken(raw: string, v = .5) {

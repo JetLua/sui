@@ -1,37 +1,39 @@
 <script lang="ts">
-  import {animate} from 'popmotion'
-  import {untrack, type Snippet} from 'svelte'
+  import clsx from 'clsx'
+  import {untrack} from 'svelte'
   import type {HTMLAttributes} from 'svelte/elements'
 
   interface Props extends HTMLAttributes<HTMLElement> {
     value: number
-    // children: Snippet
+    abbr?: boolean
   }
 
-  const {value, ...props}: Props = $props()
+  let {value, abbr, class: cls, ...props}: Props = $props()
 
-  // const snap = $state({
-  //   value: 0
-  // })
+  const _value = $derived.by(() => {
+    if (!abbr) return value.toString()
+    const units = ['', 'W', 'M', 'B']
+    let _value = value
+    let count = 0
 
-  // function tick(value: number) {
-  //   animate({
-  //     from: snap.value,
-  //     to: value,
-  //     duration: 3e2,
-  //     onUpdate: v => {
-  //       snap.value = v | 0
-  //     }
-  //   })
-  // }
+    untrack(() => {
+      while (_value > 9999) {
+        _value /= 10000
+        count++
+      }
+    })
 
-  // $effect(() => {
-  //   const v = value
-  //   untrack(() => tick(v))
-  // })
+    return `${_value}${units[count]}`
+  })
+
+  console.log(abbr)
 </script>
 
-<span {...props} style:--num={value}></span>
+{#if abbr}
+  <span class={cls} {...props}>{_value}</span>
+{:else}
+  <span class={clsx(cls, 'raw')} {...props} style:--num={_value}></span>
+{/if}
 
 <style lang="scss">
   @property --num {
@@ -40,12 +42,12 @@
     inherits: false;
   }
 
-  span {
+  .raw {
     transition: --num 1s;
     counter-reset: num var(--num);
-  }
 
-  span::after {
-    content: counter(num);
+    &::after {
+      content: counter(num);
+    }
   }
 </style>
