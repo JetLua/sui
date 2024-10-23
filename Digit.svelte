@@ -25,8 +25,6 @@
 
     return `${_value}${units[count]}`
   })
-
-  console.log(abbr)
 </script>
 
 {#if abbr}
