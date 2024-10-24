@@ -25,3 +25,10 @@ export function toString(o: CSSStyleDeclaration): string
 export function toString(o: any) {
   return Object.entries(o).map(([k, v]) => `${k}:${v}`).join(';')
 }
+
+export const onKeyDown: HTMLElement['onkeydown'] = (e) => {
+  if (!e.target) return
+  const k = e.key.toLowerCase()
+  if (k !== ' ' && k !== 'enter') return
+  e.target.dispatchEvent(new MouseEvent('click', {view: e.view, bubbles: true}))
+}

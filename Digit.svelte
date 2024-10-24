@@ -6,9 +6,10 @@
   interface Props extends HTMLAttributes<HTMLElement> {
     value: number
     abbr?: boolean
+    anime?: boolean
   }
 
-  let {value, abbr, class: cls, ...props}: Props = $props()
+  let {value, abbr, class: cls, anime = true, ...props}: Props = $props()
 
   const _value = $derived.by(() => {
     if (!abbr) return value.toString()
@@ -30,7 +31,7 @@
 {#if abbr}
   <span class={cls} {...props}>{_value}</span>
 {:else}
-  <span class={clsx(cls, 'raw')} {...props} style:--num={_value}></span>
+  <span class={clsx(cls, 'raw', anime && 'anime')} {...props} style:--num={_value}></span>
 {/if}
 
 <style lang="scss">
@@ -41,8 +42,11 @@
   }
 
   .raw {
-    transition: --num 1s;
     counter-reset: num var(--num);
+
+    &.anime {
+      transition: --num 1s;
+    }
 
     &::after {
       content: counter(num);
